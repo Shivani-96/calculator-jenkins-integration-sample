@@ -1,44 +1,33 @@
-pipeline {
-    environment{
-    	registry = "shivani96/test"
-    	registryCredential = '5bc8ebfc-76b6-42aa-8623-c0a8f3772d54'
-    	dockerImage = ''
-    	dockerImageLatest = ''
-    }
+node {
+    def app
 
     stage('Clone repository') {
-        /* Let's make sure we have the repository cloned to our workspace */
+        /* Cloning the Repository to our Workspace */
 
-        steps{
-        	git 'https://github.com/Shivani-96/calculator-jenkins-integration-sample'
-        }
+        checkout scm
     }
 
     stage('Build image') {
-        /* This builds the actual image; synonymous to
-         * docker build on the command line */
-		steps{
-			script{ 
-				dockerImage = docker.build registry + "$:BUILD_NUMBER"
-				dockerImageLatest = docker.build registry + ":latest" 
-			}
-		}
-        
+        /* This builds the actual image */
+
+        app = docker.build("shivani96/jenkins-docker")
     }
 
+    stage('Test image') {
+        
+        app.inside {
+            echo "Tests passed"
+        }
+    }
 
     stage('Push image') {
-        /* Finally, we'll push the image with two tags:
-         * First, the incremental build number from Jenkins
-         * Second, the 'latest' tag.
-         * Pushing multiple tags is cheap, as all the layers are reused. */
-         steps{
-         	script{ 
-         		docker.withRegistry('https://registry.hub.docker.com', registryCredential) {
-            	dockerImage.push("${env.BUILD_NUMBER}")
-            	dockerImageLatest.push("latest")
-        		}
-         	}
-         }
-       }
+        /* 
+			You would need to first register with DockerHub before you can push images to your account
+		*/
+        docker.withRegistry('https://registry.hub.docker.com', 'docker-jenkins') {
+            app.push("${env.BUILD_NUMBER}")
+            app.push("latest")
+            } 
+                echo "Trying to Push Docker Build to DockerHub"
+    }
 }
