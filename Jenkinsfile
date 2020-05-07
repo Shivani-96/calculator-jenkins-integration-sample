@@ -1,4 +1,4 @@
-node {
+pipeline {
     environment{
     	registry = "shivani96/test"
     	registryCredential = '5bc8ebfc-76b6-42aa-8623-c0a8f3772d54'
