@@ -31,9 +31,8 @@ node {
                 echo "Trying to Push Docker Build to DockerHub"
     }
 	stage('Deploying image with rundeck') {
-      steps{
      
         build job: 'rundeck-pipeline'
-        }
+        
       }
 }
