@@ -4,12 +4,14 @@ public class Calculator {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		int sum = add(2,3);
-		System.out.println(sum);
+		add(2,3);
+		subtract(2, 3); 
+		multiply(2, 3); 
+		divide(2, 3); 
 	}
 	
-	public static int add(int a,int b) {
-		return a+b;
+	public static void add(int a,int b) {
+		System.out.println(a+b);
 	}
 
 	public static void subtract(int a, int b) {
@@ -18,5 +20,13 @@ public class Calculator {
 	
 	public static void multiply(int a,int b) {
 		System.out.println(a*b); 
+	}
+	
+	public static void divide(int a,int b) {
+		try {
+			System.out.println(a/b);
+		}catch(Exception e) {
+			System.out.println("Divide by zero.");
+		}
 	}
 }
